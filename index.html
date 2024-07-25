@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Polkadot Address Generator</title>
+  <script src="https://unpkg.com/@polkadot/api@latest"></script>
+  <script src="https://unpkg.com/@polkadot/extension-dapp@latest"></script>
+</head>
+<body>
+  <h1>Generate a Polkadot Address</h1>
+  <button id="generate-btn">Generate Address</button>
+  <p id="mnemonic"></p>
+  <p id="address"></p>
+
+  <script>
+    async function enableExtension() {
+      const extensions = await web3Enable('Your App Name');
+      if (extensions.length === 0) {
+        throw new Error('No extension installed');
+      }
+    }
+
+    document.getElementById('generate-btn').addEventListener('click', async () => {
+      try {
+        await enableExtension();
+
+        const response = await fetch('http://localhost:3000/generate-address');
+        const data = await response.json();
+        document.getElementById('mnemonic').innerText = `Mnemonic: ${data.mnemonic}`;
+        document.getElementById('address').innerText = `Address: ${data.address}`;
+      } catch (error) {
+        console.error(error);
+        alert('Failed to generate address');
+      }
+    });
+  </script>
+</body>
+</html>
